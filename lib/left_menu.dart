@@ -116,14 +116,14 @@ class NavigationMenu with ChangeNotifier {
   Widget _createSpacer() {
     return Column(
       children: [
-        SizedBox(
+        const SizedBox(
           height: 3,
         ),
         Container(
           height: 1,
           color: Colors.black26,
         ),
-        SizedBox(
+        const SizedBox(
           height: 3,
         ),
       ],
@@ -141,7 +141,7 @@ class NavigationMenu with ChangeNotifier {
       }
     }
 
-    entries.add(SizedBox(
+    entries.add(const SizedBox(
       height: 100,
     ));
 

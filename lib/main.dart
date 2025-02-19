@@ -9,6 +9,7 @@ import 'package:json_string/json_string.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webapp_template/screens/project_screen.dart';
+import 'package:webapp_template/screens/upload_data_screen.dart';
 import 'package:webapp_template/webapp.dart';
 import 'package:webapp_template/webapp_data.dart';
 import 'package:webapp_ui_commons/mixin/progress_log.dart';
@@ -25,9 +26,6 @@ void main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
-
-
-
       runApp(MaterialApp(
         home: const KumoAnalysisApp(),
         navigatorKey: navigatorKey,
@@ -35,7 +33,7 @@ void main() async {
     },
     (error, stackTrace) {
       if (navigatorKey.currentContext != null) {
-        if (error is sci.ServiceError ) {
+        if (error is sci.ServiceError) {
           print(error);
           print(stackTrace);
           ErrorScreen errorHandler = ErrorScreen(
@@ -47,7 +45,6 @@ void main() async {
               barrierDismissible: false,
               context: navigatorKey.currentContext!,
               builder: (context) => errorHandler.build(context));
-
         }
       } else {
         print("Context or null check error");
@@ -81,11 +78,8 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
 
   late final Image logo;
 
-
   @override
   initState() {
-    
-
     app = WebApp();
     appData = WebAppData(app);
 
@@ -94,24 +88,19 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       openDialog(context);
 
-      log("Initializing User Session",
-          dialogTitle: "WebApp");
+      log("Initializing User Session", dialogTitle: "WebApp");
 
       await app.init();
 
-
-      log("Initializing File Structure",
-          dialogTitle: "WebApp");
+      log("Initializing File Structure", dialogTitle: "WebApp");
 
       // var workflowSettingsFiles = [
       //   "assets/umap_settings.json"
       // ];
 
-      
       var img = await rootBundle.load("assets/img/logo.png");
       var bData = img.buffer.asUint8List();
-      logo = Image.memory(bData, width: 380,
-            height: 100);
+      logo = Image.memory(bData, width: 380, height: 100);
 
       // BASIC Initialization
       await appData.init(app.projectId, app.projectName, app.username);
@@ -125,7 +114,9 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
       app.addNavigationPage(
           "Project", ProjectScreen(appData, key: app.getKey("Project")));
 
-
+      // Our new Upload Data Screen goes here!
+      app.addNavigationPage("Data Upload",
+          UploadDataScreen(appData, key: app.getKey("UploadData")));
 
       appData.addListener(refresh);
       app.navMenu.addListener(() => refresh());
@@ -133,7 +124,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
       // await app.postInit();
       app.isInitialized = true;
       refresh();
-      
+
       closeLog();
     });
   }
@@ -141,7 +132,6 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
   void refresh() {
     setState(() {});
   }
-
 
   Widget _buildBanner() {
     return Column(
